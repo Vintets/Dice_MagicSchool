@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0.6 (14.08.2025)
+// Version: 1.0.7 (14.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -423,6 +423,20 @@ SUB(pickup_close)
                 click_found(24 + RND(-25, 25), 6 + RND(-5, 5))
             ELSE
                 WAITMS(20)
+            END_IF
+        END_IF
+    END_CYC
+END_SUB
+
+SUB(calc_sequences)
+    $sequence5 = 0
+    $sequence6 = 0
+    FOR($i=0, $i < 4)
+        IF($dice_meanings[$i] == 5)
+            INC($sequence5)
+        ELSE
+            IF($dice_meanings[$i] == 6)
+                INC($sequence6)
             END_IF
         END_IF
     END_CYC
