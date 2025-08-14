@@ -1,0 +1,32 @@
+
+# расположение
+#WIN#
+cd /d "%YandexDisk%\Clickermann v4.13.14x32\projects\BigProjects\Dice_MagicSchool"
+
+# запуск
+Dice.cms
+
+
+# ======================================================================================================================
+            *** Git ***
+
+Проект Dice_MagicSchool
+    cd "$YandexDisk/Clickermann v4.13.14x32/projects/BigProjects/Dice_MagicSchool"
+    git remote add origin git@bitbucket.org:Vintets/dice_magicschool.git
+    git remote set-url origin --add git@github.com:Vintets/Dice_MagicSchool.git
+
+    git it
+    git push -u origin master
+    git push origin master
+
+
+# ======================================================================================================================
+            *** Анализ ***
+
+
+
+# ======================================================================================================================
+
+
+
+# ======================================================================================================================

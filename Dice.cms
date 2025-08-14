@@ -1,0 +1,356 @@
+﻿#name "Dice_MagicSchool"
+// Author: Vint
+// Version: 1.0 (12.08.2025)
+// Скрипт для Clickermann v4.13.014
+
+#define \n: STRCONCAT(char(13),char(10))
+#define @TAB: char(9)
+
+//#include "libs\arrey.cms"
+//#include "libs\string.cms"
+
+
+//                              Настройки
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+// уровень логирования 0-NOTSET, 1-CRITICAL 2-ERROR 3-WARNING 4-INFO 5-DEBUG
+$loglevel = 5
+
+// главная задержка после клика (при автомате)
+$delay_click_found = 500
+
+// главная задержка после клика (при автомате)
+$delay_after_start = 1200
+
+// координаты окна лога
+$log_x = 1920
+$log_y = 510
+
+// тест со скрина
+$test = #TRUE
+
+
+//=========================== constants (не менять) ============================
+
+// Папка с картинками
+$textures = "textures\"
+// STRCONCAT($textures,"base.bmp")
+
+// используемые изображения
+$close = "close.bmp" // закрыть  +24+6
+$pickup = "pickup.bmp" // забрать +20+4
+
+// зона всех кубиков
+$dice_zone_x1 = 162
+$dice_zone_y1 = 190
+$dice_zone_x2 = 366
+$dice_zone_y2 = 394
+
+// кнопки
+$start_x = 530  // ±15
+$start_y = 596  // ±5
+$finish_x = $start_x
+$finish_y = $start_y
+
+// координаты кубиков
+UNDEFINE($dice)
+STRSEPARATE("263:220:335:291:263:364:192:291,", ":", $dice)
+
+// координаты точек на кубиках
+$dots5 = "0:0:15:-15"
+$dots6 = "15:0:-15:0"
+
+// координаты маркера присутствия кубика
+UNDEFINE($markers)
+STRSEPARATE("0:-15:0:15,", ":", $markers)
+
+// constant color colormode 7
+$color_black = 8355711
+$color_red = 8355839
+$color_green = 8388479
+$color_yellow = 8388607
+$color_blue = 16744319
+$color_lila = 16744447
+$color_cyan = 16777087
+$color_white = 16777215
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡
+//          *** libs include ***
+SUB(get_datetime_str)
+    // Пример вызова:
+    // get_datetime_str()
+    // Возврат
+    // $datetime_str
+    UNDEFINE($timedata)
+    ARRPUSH($timedata, $_time_h)
+    ARRPUSH($timedata, $_time_m)
+    ARRPUSH($timedata, $_time_s)
+    ARRPUSH($timedata, $_date_d)
+    ARRPUSH($timedata, $_date_m)
+    ARRPUSH($timedata, $_date_y)
+
+    FOR($i_t=0, $i_t < 6)
+        IF($timedata[$i_t] < 10)
+            $timedata[$i_t] = STRCONCAT("0", $timedata[$i_t])
+        END_IF
+    END_CYC
+
+    $datetime_str = STRCONCAT($timedata[5], ".", $timedata[4], ".", $timedata[3], "_", $timedata[0], ".", $timedata[1], ".", $timedata[2])
+END_SUB
+
+//======================================================================================================================
+
+SUB(version_self)
+    // Если версия clickermann = "4.14..." то $ver_414 = #TRUE
+    //4.13.014
+    //4.14.003b
+    IF(STRCUT($_ver_self, 1, 4) == "4.14")
+        $ver_414 = #TRUE
+    ELSE
+        $ver_414 = #FALSE
+    END_IF
+END_SUB
+
+SUB(critical_error, $ce_message)
+    IF($ver_414)
+        LOGWRITEC(STRCONCAT("*** Critical_error!!! ***  ", $ce_message), 255)
+    ELSE
+        LOGWRITE(STRCONCAT("*** Critical_error!!! ***  ", $ce_message))
+    END_IF
+    HALT
+END_SUB
+
+SUB(parking)
+    // паркуемся
+    MOVE($park_x, $park_y)
+    WAITMS(20)
+END_SUB
+
+SUB(log_region, $lr_x1, $lr_y1, $lr_x2, $lr_y2)
+    IF($loglevel >= 5)
+        $lr_x1 = $wx1 + $lr_x1
+        $lr_y1 = $wy1 + $lr_y1
+        $lr_x2 = $wx1 + $lr_x2
+        $lr_y2 = $wy1 + $lr_y2
+        LOGWRITE("Задана область:  ", $lr_x1, ",", $lr_y1, ", ", $lr_x2, ",", $lr_y2)
+    END_IF
+END_SUB
+
+SUB(log_abs_region)
+    IF($loglevel >= 5)
+        LOGWRITE("Задана область:  ", $ar_x1, ",", $ar_y1, ", ", $ar_x2, ",", $ar_y2)
+    END_IF
+END_SUB
+
+SUB(set_abs_region, $sar_x1, $sar_y1, $sar_x2, $sar_y2)
+    // задать абсолютный регион $ar_x1, $ar_y1, $ar_x2, $ar_y2
+    $ar_x1 = $wx1 + $sar_x1
+    $ar_y1 = $wy1 + $sar_y1
+    $ar_x2 = $wx1 + $sar_x2
+    $ar_y2 = $wy1 + $sar_y2
+END_SUB
+
+SUB(find_pic_nw, $fpnw_x1,$fpnw_y1,$fpnw_x2,$fpnw_y2, $fpnw_image, $fpnw_percent, $fpnw_colorm)
+    // поиск картинки без ожидания
+    // координаты приложения (относительные)
+    $is_found = #FALSE
+    set_abs_region($fpnw_x1, $fpnw_y1, $fpnw_x2, $fpnw_y2)
+    IF($parking)
+        parking()
+    END_IF
+
+    IF($loglevel == 5)
+        LOGWRITE("Ищем картинку ", STRCONCAT($textures, $fpnw_image))
+    END_IF
+
+    GETSCREEN($ar_x1, $ar_y1, $ar_x2, $ar_y2)
+    IF($fpnw_colorm != 0)
+        COLORMODE($fpnw_colorm, $ar_x1, $ar_y1, $ar_x2, $ar_y2)
+    END_IF
+    IF_PICTURE_IN($ar_x1, $ar_y1, $ar_x2, $ar_y2, STRCONCAT($textures, $fpnw_image), 65280, $fpnw_percent)
+        $is_found = #TRUE
+        $found_x = $_return1
+        $found_y = $_return2
+        IF($loglevel >= 4)
+            LOGWRITE("Найдено  ", $fpnw_image, "  в ", $_return1, "/", $_return2)
+        END_IF
+    ELSE
+        WAITMS(20)
+    END_IF
+END_SUB
+
+SUB(find_pic_wait, $fpw_x1,$fpw_y1,$fpw_x2,$fpw_y2,$fpw_image, $fpw_percent, $fpw_colorm, $fpw_wait)
+    // ожидание картинки
+    // координаты приложения (относительные)
+    parking()
+    $parking = #FALSE
+    $is_found = #FALSE
+    $time_notfound = $_ms + ($fpw_wait * 1000)
+    WHILE(($is_found == #FALSE) & ($time_notfound > $_ms))
+        find_pic_nw($fpw_x1,$fpw_y1,$fpw_x2,$fpw_y2, $fpw_image, $fpw_percent, $fpw_colorm)
+    END_CYC
+    IF($is_found == #FALSE)
+        LOGWRITE("время истекло, картинка не найдена")
+    END_IF
+    $parking = #TRUE
+END_SUB
+
+SUB(waiting_disappear, $wd_x1,$wd_y1,$wd_x2,$wd_y2,$wd_image, $wd_percent, $wd_colorm, $wd_wait, $wd_period)
+    // ожидание исчезновения картинки
+    // координаты приложения (относительные)
+    // $wd_image - искомое изображение
+    // $wd_percent - процент совпадения
+    // $wd_colorm - режим COLORMODE
+    // $wd_wait - искать в течении (секунд)
+    // $wd_period - частота проверки (миллисекунд)
+    parking()
+    $parking = #FALSE
+    $is_found = #TRUE
+    $time_notfound = $_ms + ($wd_wait * 1000)
+    WHILE(($is_found) & ($time_notfound > $_ms))
+        find_pic_nw($wd_x1,$wd_y1,$wd_x2,$wd_y2, $wd_image, $wd_percent, $wd_colorm)
+        WAITMS($wd_period)
+    END_CYC
+    IF(($is_found) & ($loglevel >= 4))
+        LOGWRITE("время истекло, картинка не исчезла")
+    END_IF
+    $parking = #TRUE
+END_SUB
+
+SUB(main_screenshot)
+    parking()
+    GETSCREEN($wx1,$wy1, $wx2,$wy2)
+    get_datetime_str()
+    $screenshot_filename = STRCONCAT("screens\", "Shot_", $datetime_str, ".bmp")
+    SCREENSHOTFIX($wx1,$wy1, $wx2,$wy2, $screenshot_filename, 0)
+    // SCREENSHOTEX(0, 0, 100, 10, "pref_", 0)
+END_SUB
+
+SUB(rel_move, $rm_delta_x, $rm_delta_y)
+    // относительное передвижение MOVE
+    MOVE($wx1 + $rm_delta_x, $wy1 + $rm_delta_y)
+    WAITMS(700)
+END_SUB
+
+SUB(click, $cldelta_x, $cldelta_y)
+    IF($test)
+        LCLICK($wx1 + $cldelta_x, $wy1 + $cldelta_y)
+    ELSE
+        rel_move($cldelta_x, $cldelta_y)  // если тест
+    END_IF
+    IF($loglevel >= 5)
+        LOGWRITE("Клик ", $wx1 + $cldelta_x, "  ", $wy1 + $cldelta_y)
+    END_IF
+END_SUB
+
+SUB(click_found, $clf_delta_x, $clf_delta_y)
+    IF($is_found)
+        IF($test)
+            LCLICK($found_x + $clf_delta_x, $found_y + $clf_delta_y)
+        ELSE
+            MOVE($found_x + $clf_delta_x, $found_y + $clf_delta_y)  // если тест
+        END_IF
+        IF($loglevel >= 5)
+            LOGWRITE("Клик ", $found_x + $clf_delta_x, "  ", $found_y + $clf_delta_y)
+        END_IF
+        WAITMS(300)
+    END_IF
+END_SUB
+
+SUB(find_game)
+    // получаем основные рабочие координаты
+    $maxwin_x = 450
+    $maxwin_y = 210
+    IF($test)  // если тест со скрина
+        $maxwin_y = $maxwin_y + 103
+    END_IF
+
+    GETSCREEN(0, 0, $maxwin_x, $maxwin_y)
+    COLORMODE(7, 0, 0, $maxwin_x, $maxwin_y)
+    IF_PICTURE_IN(0, 0, $maxwin_x, $maxwin_y, STRCONCAT($textures, "game.bmp"), -1, 100)
+        $wx1 = $_return1 + 7
+        $wy1 = $_return2 + 2
+        IF($loglevel >= 4)
+            LOGWRITE("Найдено  ", "game.bmp", "  в ", $_return1, "/", $_return2)
+        END_IF
+    ELSE
+        critical_error("Не найдено окно игры")
+    END_IF
+    $win_w = 1078
+    $win_h = 705
+    $wx2 = $wx1 + $win_w - 1
+    $wy2 = $wy1 + $win_h - 1
+    IF($loglevel >= 4)
+        LOGWRITE("Main field: ", $wx1, ",", $wy1, "-", $wx2, ",", $wy2, "  ", $win_w, "x", $win_h)
+    END_IF
+END_SUB
+
+SUB(init)
+    LOGCLEAR
+    IF($loglevel > 0)
+        LOGSHOW(1, $log_x, $log_y)
+        WAITMS(300)
+        $hwnd_log = WNDFIND("Лог")
+        WNDSIZE($hwnd_log, 384, 500)
+        LOGSHOW(1, $log_x, $log_y)
+    ELSE
+        WAITMS(200)
+    END_IF
+
+    version_self()
+
+    find_game()
+    $park_x = $wx2
+    $park_y = $wy2
+
+    LOGWRITE(\n, \n, "*************************************************")
+END_SUB
+
+SUB(get_hash_scene)  // пример
+    $isDataScene = #FALSE
+
+    parking()
+    WAITMS(10)
+    GETSCREEN($wx1,$wy2-4, $wx1+999,$wy2)
+    $hash_scene = PXLCRC($wx1,$wy2-4, $wx1+999,$wy2)
+    LOGWRITE("hash_scene ", $hash_scene)
+
+    $hash_scene_file = INIREAD($scenes_ini, "hash_scene", $hash_scene)
+    IF($hash_scene_file != "")
+        $isDataScene = #TRUE
+    END_IF
+END_SUB
+
+SUB(main)
+    $mainloop = #TRUE
+    WHILE($mainloop)
+        click($start_x, $start_y)
+        WAITMS($delay_after_start)
+
+
+    END_CYC
+END_SUB
+
+SUB(dev)
+    // отладочные действия
+
+    init()
+
+    HALT
+END_SUB
+
+//======================================================================================================================
+//**********************************************************************************************************************
+
+// init()
+dev()
+main()
+
+HALT
+
+$reroll = 6
+
+IF($loglevel >= 4)
+    //
+END_IF

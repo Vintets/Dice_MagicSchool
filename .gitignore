@@ -1,0 +1,22 @@
+# System
+Thumbs.db
+
+# Venv
+
+
+# Configs
+
+
+# Project files
+
+
+# Project dirs
+/screens/
+/zDice_MagicSchoolDevelopment/*
+
+# Other files
+**/*.lnk
+!/zDice_MagicSchoolDevelopment/_Dice_MagicSchoolDescription.txt
+/*.bmp
+
+# User other data
