@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0.4 (14.08.2025)
+// Version: 1.0.5 (14.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -16,8 +16,8 @@
 // уровень логирования 0-NOTSET, 1-CRITICAL 2-ERROR 3-WARNING 4-INFO 5-DEBUG
 $loglevel = 5
 
-// главная задержка после клика (при автомате)
-$delay_click_found = 500
+// задержка между сериями
+$delay_between_series = 1000
 
 // главная задержка после клика (при автомате)
 $delay_after_start = 1200
@@ -416,6 +416,7 @@ SUB(main)
         LOG_ARR("$dice_meanings", ARRSIZE($dice_meanings))
 
         HALT
+        WAITMS($delay_between_series) + RND(0, 500)
     END_CYC
 END_SUB
 
