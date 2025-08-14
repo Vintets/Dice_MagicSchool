@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0.5 (14.08.2025)
+// Version: 1.0.6 (14.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -397,6 +397,37 @@ SUB(get_dice_meaning, $gdm_dice_number, $gtm_is_getscreen)
     END_IF
 END_SUB
 
+SUB(pickup_close)
+    // ЗАБРАТЬ и ЗАКРЫТЬ
+    set_abs_region(500, 420, 578, 490)
+    $is_found = #FALSE
+    WHILE($is_found == #FALSE)
+        GETSCREEN($ar_x1, $ar_y1, $ar_x2, $ar_y2)
+        COLORMODE(7, $ar_x1, $ar_y1, $ar_x2, $ar_y2)
+        IF_PICTURE_IN($ar_x1, $ar_y1, $ar_x2, $ar_y2, STRCONCAT($textures, $pickup), -1, 95)
+            $is_found = #TRUE
+            $found_x = $_return1
+            $found_y = $_return2
+            IF($loglevel >= 4)
+                LOGWRITE("Найдено 'Забрать'")
+            END_IF
+            click_found(20 + RND(-25, 25), 4 + RND(-5, 5))
+        ELSE
+            IF_PICTURE_IN($ar_x1, $ar_y1, $ar_x2, $ar_y2, STRCONCAT($textures, $close), -1, 95)
+                $is_found = #TRUE
+                $found_x = $_return1
+                $found_y = $_return2
+                IF($loglevel >= 4)
+                    LOGWRITE("Найдено 'Закрыть'")
+                END_IF
+                click_found(24 + RND(-25, 25), 6 + RND(-5, 5))
+            ELSE
+                WAITMS(20)
+            END_IF
+        END_IF
+    END_CYC
+END_SUB
+
 SUB(main)
     $mainloop = #TRUE
     WHILE($mainloop)
@@ -407,13 +438,29 @@ SUB(main)
         UNDEFINE($dice_meanings)
         STRSEPARATE("0:0:0:0", ":", $dice_meanings)
 
+        $finish = #FALSE
         $reroll = 6
         waiting_to_cast(0)
         get_dice_meaning(0, #TRUE)
         get_dice_meaning(1, #FALSE)
         get_dice_meaning(2, #FALSE)
         get_dice_meaning(3, #FALSE)
-        LOG_ARR("$dice_meanings", ARRSIZE($dice_meanings))
+        IF($loglevel == 5)
+            LOG_ARR("$dice_meanings", ARRSIZE($dice_meanings))
+        END_IF
+
+        WHILE($reroll > 0)
+
+        END_CYC
+
+        IF($reroll == 0)
+            // закончились броски
+            pickup_close()
+            $finish = #TRUE
+        ELSE
+
+        END_IF
+
 
         HALT
         WAITMS($delay_between_series) + RND(0, 500)
