@@ -16,10 +16,10 @@
 // уровень логирования 0-NOTSET, 1-CRITICAL 2-ERROR 3-WARNING 4-INFO 5-DEBUG
 $loglevel = 5
 
-// задержка между сериями
+// задержка между сериями ms (+0-500)
 $delay_between_series = 1000
 
-// главная задержка после клика (при автомате)
+// главная задержка после клика 'начать'
 $delay_after_start = 1200
 
 // координаты окна лога
@@ -432,7 +432,7 @@ SUB(main)
     $mainloop = #TRUE
     WHILE($mainloop)
         // begin
-        click($start_x, $start_y)
+        click($start_x + RND(-15, 15), $start_y + RND(-5, 5))
         WAITMS($delay_after_start)
 
         UNDEFINE($dice_meanings)
