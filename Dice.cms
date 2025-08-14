@@ -54,7 +54,7 @@ $finish_y = $start_y
 
 // координаты кубиков
 UNDEFINE($dice_coord)
-STRSEPARATE("263:220:335:291:263:364:192:291,", ":", $dice_coord)
+STRSEPARATE("263:220:335:291:263:364:192:291", ":", $dice_coord)
 
 // координаты точек на кубиках
 $dots5 = "0:0:15:-15"
