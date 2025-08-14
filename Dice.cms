@@ -330,6 +330,8 @@ END_SUB
 
 SUB(waiting_to_cast, $wtc_dice_number)
     // waiting to cast the dice
+    // waiting_to_cast(номерКубика_0-3)
+    parking()
     $wtc_dice_x = $dice_coord[$wtc_dice_number * 2]
     $wtc_dice_y = $dice_coord[$wtc_dice_number * 2 + 1]
 
