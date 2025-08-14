@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0.2 (14.08.2025)
+// Version: 1.0.4 (14.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -57,8 +57,10 @@ UNDEFINE($dice_coord)
 STRSEPARATE("263:220:335:291:263:364:192:291", ":", $dice_coord)
 
 // координаты точек на кубиках
-$dots5 = "0:0:15:-15"
-$dots6 = "15:0:-15:0"
+UNDEFINE($dots5)
+STRSEPARATE("0:0:15:-15", ":", $dots5)
+UNDEFINE($dots6)
+STRSEPARATE("-15:0:15:0", ":", $dots6)
 
 // дельта координат маркера присутствия кубика
 $marker_dy = 15
@@ -364,6 +366,37 @@ SUB(waiting_to_cast, $wtc_dice_number)
     END_CYC
 END_SUB
 
+SUB(get_dice_meaning, $gdm_dice_number, $gtm_is_getscreen)
+    // получение значений на кубиках
+    // get_dice_meaning(номерКубика_0-3, делатьЛиСнимокЭкрана)
+    IF($gtm_is_getscreen)
+        set_abs_region($dice_zone_x1, $dice_zone_y1, $dice_zone_x2, $dice_zone_y2)
+        GETSCREEN($ar_x1, $ar_y1, $ar_x2, $ar_y2)
+        COLORMODE(7, $ar_x1, $ar_y1, $ar_x2, $ar_y2)
+    END_IF
+    $wtc_dice_x = $dice_coord[$gdm_dice_number * 2]
+    $wtc_dice_y = $dice_coord[$gdm_dice_number * 2 + 1]
+    $wtc_not_defined = #TRUE
+
+    // если 5
+    IF($wtc_not_defined)
+        set_abs_region($wtc_dice_x+$dots5[0], $wtc_dice_y+$dots5[1], $wtc_dice_x+$dots5[2], $wtc_dice_y+$dots5[3])
+        IF((PXL($ar_x1, $ar_y1) == $color_black) & (PXL($ar_x2, $ar_y2) == $color_black))
+            $dice_meanings[$gdm_dice_number] = 5
+            $wtc_not_defined = #FALSE
+        END_IF
+    END_IF
+
+    // если 6
+    IF($wtc_not_defined)
+        set_abs_region($wtc_dice_x+$dots6[0], $wtc_dice_y+$dots6[1], $wtc_dice_x+$dots6[2], $wtc_dice_y+$dots6[3])
+        IF((PXL($ar_x1, $ar_y1) == $color_black) & (PXL($ar_x2, $ar_y2) == $color_black))
+            $dice_meanings[$gdm_dice_number] = 6
+            $wtc_not_defined = #FALSE
+        END_IF
+    END_IF
+END_SUB
+
 SUB(main)
     $mainloop = #TRUE
     WHILE($mainloop)
@@ -371,8 +404,16 @@ SUB(main)
         click($start_x, $start_y)
         WAITMS($delay_after_start)
 
+        UNDEFINE($dice_meanings)
+        STRSEPARATE("0:0:0:0", ":", $dice_meanings)
+
         $reroll = 6
         waiting_to_cast(0)
+        get_dice_meaning(0, #TRUE)
+        get_dice_meaning(1, #FALSE)
+        get_dice_meaning(2, #FALSE)
+        get_dice_meaning(3, #FALSE)
+        LOG_ARR("$dice_meanings", ARRSIZE($dice_meanings))
 
         HALT
     END_CYC
