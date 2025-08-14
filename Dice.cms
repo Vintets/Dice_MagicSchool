@@ -23,7 +23,7 @@ $delay_click_found = 500
 $delay_after_start = 1200
 
 // координаты окна лога
-$log_x = 1920
+$log_x = 1536
 $log_y = 510
 
 // тест со скрина
@@ -354,32 +354,33 @@ END_SUB
 SUB(main)
     $mainloop = #TRUE
     WHILE($mainloop)
+        // begin
         click($start_x, $start_y)
         WAITMS($delay_after_start)
 
+        $reroll = 6
         waiting_to_cast(0)
 
+        HALT
     END_CYC
 END_SUB
 
 SUB(dev)
     // отладочные действия
 
-    init()
-
+    // SCREENSHOTEX($ar_x1, $ar_y1, $ar_x2, $ar_y2, "pref_", 0)
     HALT
 END_SUB
 
 //======================================================================================================================
 //**********************************************************************************************************************
 
-// init()
-dev()
+init()
+// dev()
 main()
 
 HALT
 
-$reroll = 6
 
 IF($loglevel >= 4)
     //
