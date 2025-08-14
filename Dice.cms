@@ -345,7 +345,7 @@ SUB(waiting_to_cast, $wtc_dice_number)
         $wtc_count_up = PXLCOUNT($ar_x1, $ar_y1, $ar_x2, $ar_y2, $color_yellow)
         set_abs_region($wtc_dice_x-2,$wtc_dice_y+$marker_dy-2, $wtc_dice_x+2,$wtc_dice_y+$marker_dy+2)
         $wtc_count_down = PXLCOUNT($ar_x1, $ar_y1, $ar_x2, $ar_y2, $color_yellow)
-        IF($wtc_count_up > 20) & ($wtc_count_down > 20)
+        IF(($wtc_count_up >= 20) & ($wtc_count_down >= 20))
             $wtc_loop = #FALSE
             WAITMS(100)
         END_IF
