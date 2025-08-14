@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0 (12.08.2025)
+// Version: 1.0.1 (14.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -60,9 +60,8 @@ STRSEPARATE("263:220:335:291:263:364:192:291,", ":", $dice)
 $dots5 = "0:0:15:-15"
 $dots6 = "15:0:-15:0"
 
-// координаты маркера присутствия кубика
-UNDEFINE($markers)
-STRSEPARATE("0:-15:0:15,", ":", $markers)
+// дельта координат маркера присутствия кубика
+$marker_dy = 15
 
 // constant color colormode 7
 $color_black = 8355711
@@ -329,12 +328,36 @@ SUB(get_hash_scene)  // пример
     END_IF
 END_SUB
 
+SUB(waiting_to_cast, $wtc_dice_number)
+    // waiting to cast the dice
+    $wtc_dice_x = $dice[$wtc_dice_number * 2]
+    $wtc_dice_y = $dice[$wtc_dice_number * 2 + 1]
+
+    $wtc_loop = #TRUE
+    WHILE($wtc_loop)
+        set_abs_region($wtc_dice_x - 7, $wtc_dice_y - 25, $wtc_dice_x + 7, $wtc_dice_y + 25)
+        GETSCREEN($ar_x1, $ar_y1, $ar_x2, $ar_y2)
+        COLORMODE(7, $ar_x1, $ar_y1, $ar_x2, $ar_y2)
+
+        set_abs_region($wtc_dice_x-2,$wtc_dice_y-$marker_dy-2, $wtc_dice_x+2,$wtc_dice_y-$marker_dy+2)
+        $wtc_count_up = PXLCOUNT($ar_x1, $ar_y1, $ar_x2, $ar_y2, $color_yellow)
+        set_abs_region($wtc_dice_x-2,$wtc_dice_y+$marker_dy-2, $wtc_dice_x+2,$wtc_dice_y+$marker_dy+2)
+        $wtc_count_down = PXLCOUNT($ar_x1, $ar_y1, $ar_x2, $ar_y2, $color_yellow)
+        IF($wtc_count_up > 20) & ($wtc_count_down > 20)
+            $wtc_loop = #FALSE
+            WAITMS(100)
+        END_IF
+        WAITMS(100)
+    END_CYC
+END_SUB
+
 SUB(main)
     $mainloop = #TRUE
     WHILE($mainloop)
         click($start_x, $start_y)
         WAITMS($delay_after_start)
 
+        waiting_to_cast(0)
 
     END_CYC
 END_SUB
