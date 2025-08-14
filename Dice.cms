@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0.1 (14.08.2025)
+// Version: 1.0.2 (14.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -103,6 +103,17 @@ SUB(logXY, $coordX, $coordY)
     // Пример вызова:
     // logXY($_return1, $_return2)
     LOGWRITE("X = ", $coordX, ", Y = ", $coordY)
+END_SUB
+
+SUB(LOG_ARR, $la_arr, $la_arrsize)
+    // Вывод массива в лог
+    // Пример вызова:
+    // LOG_ARR("$arr", ARRSIZE($arr))
+    LOGWRITE("Размер массива ", $la_arr, ": ", $la_arrsize)
+    FOR($i_=0, $i_ < $la_arrsize)
+        LOGWRITE("[", $i_, "] = ", GETVAR(STRCONCAT($la_arr, "[", $i_, "]")))
+    END_CYC
+    LOGWRITE(\n)
 END_SUB
 
 //======================================================================================================================
