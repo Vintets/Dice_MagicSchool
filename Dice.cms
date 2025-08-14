@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0.7 (14.08.2025)
+// Version: 1.0.8 (14.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -442,6 +442,35 @@ SUB(calc_sequences)
     END_CYC
 END_SUB
 
+SUB(analize)
+    // анализ расклада костей
+    calc_sequences()
+    $more_analysis = #TRUE
+
+    // из 4
+    IF(($sequence6 == 4) | ($sequence5 == 4))
+        $finish = #TRUE
+        $more_analysis = #FALSE
+    END_IF
+
+    // из 3
+    IF($more_analysis & (($sequence6 == 3) | ($sequence5 == 3)))
+        $more_analysis = #FALSE
+        IF($sequence6 == 3)
+            $priority_sequence = 6
+        ELSE
+            $priority_sequence = 5
+        END_IF
+    END_IF
+
+    // 2 на 2
+    IF($more_analysis & ($sequence6 == 2) & ($sequence5 == 2))
+        //  $finish = #TRUE
+        // $more_analysis = #FALSE
+        // $priority_sequence = 6
+    END_IF
+END_SUB
+
 SUB(main)
     $mainloop = #TRUE
     WHILE($mainloop)
@@ -453,6 +482,7 @@ SUB(main)
         STRSEPARATE("0:0:0:0", ":", $dice_meanings)
 
         $finish = #FALSE
+        $priority_sequence = 0
         $reroll = 6
         waiting_to_cast(0)
         get_dice_meaning(0, #TRUE)
@@ -463,14 +493,14 @@ SUB(main)
             LOG_ARR("$dice_meanings", ARRSIZE($dice_meanings))
         END_IF
 
-        WHILE($reroll > 0)
+        WHILE(($reroll > 0) & ($finish == #FALSE))
+            analize()
 
         END_CYC
 
         IF($reroll == 0)
             // закончились броски
             pickup_close()
-            $finish = #TRUE
         ELSE
 
         END_IF
