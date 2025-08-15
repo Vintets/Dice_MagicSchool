@@ -609,9 +609,11 @@ SUB(dev)
 
     // pickup_close()
     // run_test_analize_variants()
-
     // SCREENSHOTEX($ar_x1, $ar_y1, $ar_x2, $ar_y2, "pref_", 0)
     HALT
+    IF($loglevel >= 4)
+        //
+    END_IF
 END_SUB
 
 //======================================================================================================================
@@ -622,8 +624,3 @@ init()
 main()
 
 HALT
-
-
-IF($loglevel >= 4)
-    //
-END_IF
