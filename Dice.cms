@@ -551,11 +551,7 @@ SUB(main)
             WAITMS(1000 + RND(0, 550))
         END_IF
 
-        IF($reroll_available == 0)
-            // закончились броски
-            pickup_close()
-        END_IF
-
+        pickup_close()
 
         HALT
         WAITMS($delay_between_series + RND(0, 500))
