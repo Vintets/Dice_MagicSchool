@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0.9 (14.08.2025)
+// Version: 1.0.10 (15.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -471,6 +471,18 @@ SUB(analize)
     END_IF
 END_SUB
 
+SUB(log_analize)
+    IF($loglevel >= 4)
+        $la_sequences = STRCONCAT($dice_meanings[0], ":", $dice_meanings[1], ":", $dice_meanings[2], ":", $dice_meanings[3])
+        LOGWRITE("Состояние костей ", $la_sequences)
+        LOGWRITE("пятёрок  ", $sequence5)
+        LOGWRITE("шестёрок ", $sequence6)
+        LOGWRITE("finish ", $finish)
+        LOGWRITE("priority sequence ", $priority_sequence)
+        LOGWRITE("----------------------------------")
+    END_IF
+END_SUB
+
 SUB(main)
     $mainloop = #TRUE
     WHILE($mainloop)
@@ -496,6 +508,7 @@ SUB(main)
         WHILE(($reroll > 0) & ($finish == #FALSE))
             analize()
 
+            log_analize()
         END_CYC
 
         IF($reroll == 0)
