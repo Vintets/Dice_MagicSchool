@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0.14 (15.08.2025)
+// Version: 1.0.15 (15.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -403,7 +403,7 @@ SUB(pickup_close)
     $is_found = #FALSE
     WHILE($is_found == #FALSE)
         GETSCREEN($ar_x1, $ar_y1, $ar_x2, $ar_y2)
-        COLORMODE(7, $ar_x1, $ar_y1, $ar_x2, $ar_y2)
+        // COLORMODE(7, $ar_x1, $ar_y1, $ar_x2, $ar_y2)
         IF_PICTURE_IN($ar_x1, $ar_y1, $ar_x2, $ar_y2, STRCONCAT($textures, $pickup), -1, 95)
             $is_found = #TRUE
             $found_x = $_return1
