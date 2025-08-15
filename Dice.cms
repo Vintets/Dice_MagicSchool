@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0.16 (15.08.2025)
+// Version: 1.0.17 (15.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -374,25 +374,25 @@ SUB(get_dice_meaning, $gdm_dice_number, $gtm_is_getscreen)
         GETSCREEN($ar_x1, $ar_y1, $ar_x2, $ar_y2)
         COLORMODE(7, $ar_x1, $ar_y1, $ar_x2, $ar_y2)
     END_IF
-    $wtc_dice_x = $dice_coord[$gdm_dice_number * 2]
-    $wtc_dice_y = $dice_coord[$gdm_dice_number * 2 + 1]
-    $wtc_not_defined = #TRUE
+    $gtm_dice_x = $dice_coord[$gdm_dice_number * 2]
+    $gtm_dice_y = $dice_coord[$gdm_dice_number * 2 + 1]
+    $gtm_not_defined = #TRUE
 
     // если 5
-    IF($wtc_not_defined)
-        set_abs_region($wtc_dice_x+$dots5[0], $wtc_dice_y+$dots5[1], $wtc_dice_x+$dots5[2], $wtc_dice_y+$dots5[3])
+    IF($gtm_not_defined)
+        set_abs_region($gtm_dice_x+$dots5[0], $gtm_dice_y+$dots5[1], $gtm_dice_x+$dots5[2], $gtm_dice_y+$dots5[3])
         IF((PXL($ar_x1, $ar_y1) == $color_black) & (PXL($ar_x2, $ar_y2) == $color_black))
             $dice_meanings[$gdm_dice_number] = 5
-            $wtc_not_defined = #FALSE
+            $gtm_not_defined = #FALSE
         END_IF
     END_IF
 
     // если 6
-    IF($wtc_not_defined)
-        set_abs_region($wtc_dice_x+$dots6[0], $wtc_dice_y+$dots6[1], $wtc_dice_x+$dots6[2], $wtc_dice_y+$dots6[3])
+    IF($gtm_not_defined)
+        set_abs_region($gtm_dice_x+$dots6[0], $gtm_dice_y+$dots6[1], $gtm_dice_x+$dots6[2], $gtm_dice_y+$dots6[3])
         IF((PXL($ar_x1, $ar_y1) == $color_black) & (PXL($ar_x2, $ar_y2) == $color_black))
             $dice_meanings[$gdm_dice_number] = 6
-            $wtc_not_defined = #FALSE
+            $gtm_not_defined = #FALSE
         END_IF
     END_IF
 END_SUB
