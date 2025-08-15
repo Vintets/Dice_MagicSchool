@@ -1,0 +1,69 @@
+﻿// configs for "Dice_MagicSchool"
+
+//                              Настройки
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+// уровень логирования 0-NOTSET, 1-CRITICAL 2-ERROR 3-WARNING 4-INFO 5-DEBUG
+$loglevel = 5
+
+// задержка между сериями ms (+0-500)
+$delay_between_series = 1000
+
+// координаты окна лога
+$log_x = 1536
+$log_y = 510
+
+// тест со скрина
+$test = #TRUE
+
+
+//=========================== constants (НЕ МЕНЯТЬ!) ===========================
+
+// Папка с картинками
+$textures = "textures\"
+// STRCONCAT($textures,"base.bmp")
+
+// используемые изображения
+$close = "close.bmp" // закрыть  +24+6
+$pickup = "pickup.bmp" // забрать +20+4
+
+// зона всех кубиков
+$dice_zone_x1 = 162
+$dice_zone_y1 = 190
+$dice_zone_x2 = 366
+$dice_zone_y2 = 394
+
+// кнопки
+$start_x = 530  // ±15
+$start_y = 596  // ±5
+$finish_x = $start_x
+$finish_y = $start_y
+
+// координаты кубиков
+UNDEFINE($dice_coord)
+STRSEPARATE("263:220:335:291:263:364:192:291", ":", $dice_coord)
+
+// координаты точек на кубиках
+UNDEFINE($dots5)
+STRSEPARATE("0:0:15:-15", ":", $dots5)
+UNDEFINE($dots6)
+STRSEPARATE("-15:0:15:0", ":", $dots6)
+
+// дельта координат маркера присутствия кубика
+$marker_dy = 15
+
+// список направлений
+UNDEFINE($directions)
+STRSEPARATE("верх:прав:низ:лев", ":", $directions)
+
+// constant color colormode 7
+$color_black = 8355711
+$color_red = 8355839
+$color_green = 8388479
+$color_yellow = 8388607
+$color_blue = 16744319
+$color_lila = 16744447
+$color_cyan = 16777087
+$color_white = 16777215
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
