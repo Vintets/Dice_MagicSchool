@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0.18 (15.08.2025)
+// Version: 1.0.19 (15.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -61,6 +61,10 @@ STRSEPARATE("-15:0:15:0", ":", $dots6)
 
 // дельта координат маркера присутствия кубика
 $marker_dy = 15
+
+// список направлений
+UNDEFINE($directions)
+STRSEPARATE("верх:прав:низ:лев", ":", $directions)
 
 // constant color colormode 7
 $color_black = 8355711
@@ -533,6 +537,17 @@ SUB(calc_reroll)
     END_CYC
 END_SUB
 
+SUB(roll_dice, $rd_dice_number)
+    // переброс
+    $rd_dice_x = $dice_coord[$rd_dice_number * 2]
+    $rd_dice_y = $dice_coord[$rd_dice_number * 2 + 1]
+    click($rd_dice_x + RND(-15, 15), $rd_dice_y + RND(-15, 15))
+    IF($loglevel >= 4)
+        LOGWRITE("Перебрасываем кубик №", $rd_dice_number, " (", $directions[$rd_dice_number], ")")
+    END_IF
+    WAITMS(RND(500, 1000))
+END_SUB
+
 SUB(main)
     $mainloop = #TRUE
     WHILE($mainloop)
@@ -562,7 +577,7 @@ SUB(main)
             log_analize()
             IF($finish == #FALSE)
                 calc_reroll()
-                // переброс
+                roll_dice($num_rerolled_dice)
             END_IF
             $reroll_available = $reroll_available - 1
         END_CYC
