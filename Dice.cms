@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0.13 (15.08.2025)
+// Version: 1.0.14 (15.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -471,15 +471,19 @@ SUB(analize)
     END_IF
 END_SUB
 
+SUB(print_log_analize, $pla_sequences)
+    LOGWRITE("Состояние костей ", $pla_sequences)
+    LOGWRITE("пятёрок  ", $sequence5)
+    LOGWRITE("шестёрок ", $sequence6)
+    LOGWRITE("finish ", $finish)
+    LOGWRITE("priority sequence ", $priority_sequence)
+    LOGWRITE("----------------------------------")
+END_SUB
+
 SUB(log_analize)
     IF($loglevel >= 4)
         $la_sequences = STRCONCAT($dice_meanings[0], ":", $dice_meanings[1], ":", $dice_meanings[2], ":", $dice_meanings[3])
-        LOGWRITE("Состояние костей ", $la_sequences)
-        LOGWRITE("пятёрок  ", $sequence5)
-        LOGWRITE("шестёрок ", $sequence6)
-        LOGWRITE("finish ", $finish)
-        LOGWRITE("priority sequence ", $priority_sequence)
-        LOGWRITE("----------------------------------")
+        print_log_analize($la_sequences)
     END_IF
 END_SUB
 
@@ -492,12 +496,7 @@ SUB(test_analize, $ta_sequences)
     // LOG_ARR("$dice_meanings", ARRSIZE($dice_meanings))
     analize()
 
-    LOGWRITE("sequences ", $ta_sequences)
-    LOGWRITE("sequence5 ", $sequence5)
-    LOGWRITE("sequence6 ", $sequence6)
-    LOGWRITE("finish ", $finish)
-    LOGWRITE("priority_sequence ", $priority_sequence)
-    LOGWRITE("-----------------------------------")
+    print_log_analize($ta_sequences)
 END_SUB
 
 SUB(run_test_analize_variants)
