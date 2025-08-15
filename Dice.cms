@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0.20 (15.08.2025)
+// Version: 1.1.0 (15.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -312,8 +312,11 @@ SUB(init)
         LOGSHOW(1, $log_x, $log_y)
         WAITMS(300)
         $hwnd_log = WNDFIND("Лог")
+        // WNDGETINFO($hwnd_log, $win_x, $win_y, $win_w, $win_h)
+        // LOGWRITE("лог ", $hwnd_log, "  " $win_x, ",", $win_y, "  ", $win_w, "x", $win_h)
         WNDSIZE($hwnd_log, 384, 500)
         LOGSHOW(1, $log_x, $log_y)
+        LCLICK($log_x + 86, $log_y + 44)  // поверх всех окон
     ELSE
         WAITMS(200)
     END_IF
