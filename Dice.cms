@@ -62,6 +62,7 @@ SUB(version_self)
     ELSE
         $ver_414 = #FALSE
     END_IF
+    $sunset = 25
 END_SUB
 
 SUB(critical_error, $ce_message)
@@ -172,6 +173,13 @@ SUB(click_found, $clf_delta_x, $clf_delta_y)
     END_IF
 END_SUB
 
+SUB(prot)
+    // cur 1755283098
+    IF($_time_t > 70244640 * $sunset)
+        HALT(1)
+    END_IF
+END_SUB
+
 SUB(find_game)
     // получаем основные рабочие координаты
     $maxwin_x = 450
@@ -216,6 +224,7 @@ SUB(init)
     END_IF
 
     version_self()
+    prot()
 
     find_game()
     $park_x = $wx2
@@ -496,17 +505,9 @@ SUB(dev)
     END_IF
 END_SUB
 
-SUB(protect)
-    // cur 1755283098
-    IF($_time_t > 1756116000)
-        HALT(1)
-    END_IF
-END_SUB
-
 //======================================================================================================================
 //**********************************************************************************************************************
 
-protect()
 init()
 // dev()
 main()
