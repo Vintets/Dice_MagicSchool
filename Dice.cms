@@ -539,8 +539,11 @@ SUB(main)
 
         WHILE(($reroll_available > 0) & ($finish == #FALSE))
             analize()
-
             log_analize()
+            IF($finish == #FALSE)
+                // переброс
+            END_IF
+            $reroll_available = $reroll_available - 1
         END_CYC
 
         IF($finish)
@@ -551,8 +554,6 @@ SUB(main)
         IF($reroll_available == 0)
             // закончились броски
             pickup_close()
-        ELSE
-
         END_IF
 
 
