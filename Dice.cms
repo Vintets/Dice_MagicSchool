@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0.12 (15.08.2025)
+// Version: 1.0.13 (15.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -542,6 +542,11 @@ SUB(main)
 
             log_analize()
         END_CYC
+
+        IF($finish)
+            click($start_x + RND(-15, 15), $start_y + RND(-5, 5))
+            WAITMS(1000 + RND(0, 550))
+        END_IF
 
         IF($reroll_available == 0)
             // закончились броски
