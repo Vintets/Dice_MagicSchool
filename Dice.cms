@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0.10 (15.08.2025)
+// Version: 1.0.11 (15.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -495,7 +495,7 @@ SUB(main)
 
         $finish = #FALSE
         $priority_sequence = 0
-        $reroll = 6
+        $reroll_available = 6
         waiting_to_cast(0)
         get_dice_meaning(0, #TRUE)
         get_dice_meaning(1, #FALSE)
@@ -505,13 +505,13 @@ SUB(main)
             LOG_ARR("$dice_meanings", ARRSIZE($dice_meanings))
         END_IF
 
-        WHILE(($reroll > 0) & ($finish == #FALSE))
+        WHILE(($reroll_available > 0) & ($finish == #FALSE))
             analize()
 
             log_analize()
         END_CYC
 
-        IF($reroll == 0)
+        IF($reroll_available == 0)
             // закончились броски
             pickup_close()
         ELSE
