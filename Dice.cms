@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0.15 (15.08.2025)
+// Version: 1.0.16 (15.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -514,6 +514,28 @@ SUB(run_test_analize_variants)
     test_analize("6:0:6:0")
 END_SUB
 
+SUB(next_num_rerolled_dice)
+    // следующая по очереди кость
+    INC($num_rerolled_dice)
+    IF($num_rerolled_dice > 3)
+        $num_rerolled_dice = 0
+    END_IF
+END_SUB
+
+SUB(calc_reroll)
+    // выбираем какой перебрасывать
+    FOR($i=0, $i < 4)
+        next_num_rerolled_dice()
+        $cur_dice = $dice_meanings[$num_rerolled_dice]
+        IF($cur_dice == 0)
+            $i = 100
+        END_IF
+        IF($priority_sequence > 0) & ($cur_dice > 4) & ($cur_dice != $priority_sequence)
+            $i = 100
+        END_IF
+    END_CYC
+END_SUB
+
 SUB(main)
     $mainloop = #TRUE
     WHILE($mainloop)
@@ -527,6 +549,7 @@ SUB(main)
         $finish = #FALSE
         $priority_sequence = 0
         $reroll_available = 6
+        $num_rerolled_dice = -1
         waiting_to_cast(0)
         get_dice_meaning(0, #TRUE)
         get_dice_meaning(1, #FALSE)
@@ -540,6 +563,7 @@ SUB(main)
             analize()
             log_analize()
             IF($finish == #FALSE)
+                calc_reroll()
                 // переброс
             END_IF
             $reroll_available = $reroll_available - 1
