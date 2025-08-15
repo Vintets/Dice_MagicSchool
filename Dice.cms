@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0.8 (14.08.2025)
+// Version: 1.0.9 (14.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -507,7 +507,7 @@ SUB(main)
 
 
         HALT
-        WAITMS($delay_between_series) + RND(0, 500)
+        WAITMS($delay_between_series + RND(0, 500))
     END_CYC
 END_SUB
 
