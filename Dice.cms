@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.0.11 (15.08.2025)
+// Version: 1.0.12 (15.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -483,6 +483,38 @@ SUB(log_analize)
     END_IF
 END_SUB
 
+SUB(test_analize, $ta_sequences)
+    $finish = #FALSE
+    $priority_sequence = 0
+    UNDEFINE($dice_meanings)
+
+    STRSEPARATE($ta_sequences, ":", $dice_meanings)
+    // LOG_ARR("$dice_meanings", ARRSIZE($dice_meanings))
+    analize()
+
+    LOGWRITE("sequences ", $ta_sequences)
+    LOGWRITE("sequence5 ", $sequence5)
+    LOGWRITE("sequence6 ", $sequence6)
+    LOGWRITE("finish ", $finish)
+    LOGWRITE("priority_sequence ", $priority_sequence)
+    LOGWRITE("-----------------------------------")
+END_SUB
+
+SUB(run_test_analize_variants)
+    // test_analize("0:0:0:0")
+    // test_analize("1:2:3:4")
+    // test_analize("5:0:0:0")
+    // test_analize("0:0:6:5")
+
+    // test_analize("6:6:6:6")
+    test_analize("5:5:5:5")
+    test_analize("5:5:0:5")
+    test_analize("5:5:6:5")
+    test_analize("5:6:5:6")
+    test_analize("0:6:5:5")
+    test_analize("6:0:6:0")
+END_SUB
+
 SUB(main)
     $mainloop = #TRUE
     WHILE($mainloop)
@@ -527,6 +559,8 @@ END_SUB
 SUB(dev)
     // отладочные действия
 
+    run_test_analize_variants()
+
     // SCREENSHOTEX($ar_x1, $ar_y1, $ar_x2, $ar_y2, "pref_", 0)
     HALT
 END_SUB
@@ -534,8 +568,8 @@ END_SUB
 //======================================================================================================================
 //**********************************************************************************************************************
 
-init()
-// dev()
+// init()
+dev()
 main()
 
 HALT
