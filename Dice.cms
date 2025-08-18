@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.2.6 (18.08.2025)
+// Version: 1.2.7 (18.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -207,6 +207,9 @@ END_SUB
 SUB(waiting_to_cast, $wtc_dice_number)
     // waiting to cast the dice
     // waiting_to_cast(номерКубика_0-3)
+    IF($loglevel >= 4)
+        LOGWRITE("Ждём выброса кубика №", $wtc_dice_number, " (", $directions[$wtc_dice_number], ")")
+    END_IF
     parking()
     $wtc_dice_x = $dice_coord[$wtc_dice_number * 2]
     $wtc_dice_y = $dice_coord[$wtc_dice_number * 2 + 1]
@@ -262,6 +265,9 @@ END_SUB
 
 SUB(pickup_close)
     // ЗАБРАТЬ и ЗАКРЫТЬ
+    IF($loglevel >= 4)
+        LOGWRITE("Ждём появление 'Забрать/Закрыть'")
+    END_IF
     set_abs_region(500, 420, 578, 490)
     $is_found = #FALSE
     WHILE($is_found == #FALSE)
