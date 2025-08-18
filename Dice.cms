@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.2.5 (18.08.2025)
+// Version: 1.2.6 (18.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -102,35 +102,6 @@ SUB(set_abs_region, $sar_x1, $sar_y1, $sar_x2, $sar_y2)
     $ar_y1 = $wy1 + $sar_y1
     $ar_x2 = $wx1 + $sar_x2
     $ar_y2 = $wy1 + $sar_y2
-END_SUB
-
-SUB(find_pic_nw, $fpnw_x1,$fpnw_y1,$fpnw_x2,$fpnw_y2, $fpnw_image, $fpnw_percent, $fpnw_colorm)
-    // поиск картинки без ожидания
-    // координаты приложения (относительные)
-    $is_found = #FALSE
-    set_abs_region($fpnw_x1, $fpnw_y1, $fpnw_x2, $fpnw_y2)
-    IF($parking)
-        parking()
-    END_IF
-
-    IF($loglevel == 5)
-        LOGWRITE("Ищем картинку ", STRCONCAT($textures, $fpnw_image))
-    END_IF
-
-    GETSCREEN($ar_x1, $ar_y1, $ar_x2, $ar_y2)
-    IF($fpnw_colorm != 0)
-        COLORMODE($fpnw_colorm, $ar_x1, $ar_y1, $ar_x2, $ar_y2)
-    END_IF
-    IF_PICTURE_IN($ar_x1, $ar_y1, $ar_x2, $ar_y2, STRCONCAT($textures, $fpnw_image), 65280, $fpnw_percent)
-        $is_found = #TRUE
-        $found_x = $_return1
-        $found_y = $_return2
-        IF($loglevel >= 4)
-            LOGWRITE("Найдено  ", $fpnw_image, "  в ", $_return1, "/", $_return2)
-        END_IF
-    ELSE
-        WAITMS(20)
-    END_IF
 END_SUB
 
 SUB(main_screenshot)
