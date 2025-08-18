@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.2.2 (18.08.2025)
+// Version: 1.2.3 (18.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -469,7 +469,7 @@ SUB(main)
             IF($finish == #FALSE)
                 calc_reroll()
                 roll_dice($num_rerolled_dice)
-                waiting_to_cast(0)
+                waiting_to_cast($num_rerolled_dice)
                 WAITMS(200)
                 get_dice_meaning($num_rerolled_dice, #TRUE)
                 WAITMS(RND(150, 550))
