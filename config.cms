@@ -24,8 +24,8 @@ $textures = "textures\"
 // STRCONCAT($textures,"base.bmp")
 
 // используемые изображения
-$close = "close.bmp" // закрыть  +24+6
-$pickup = "pickup.bmp" // забрать +20+4
+$close = "close_cm8.bmp" // закрыть  +24+6
+$pickup = "pickup_cm8.bmp" // забрать +20+4
 
 // зона всех кубиков
 $dice_zone_x1 = 162
