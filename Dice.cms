@@ -470,8 +470,9 @@ SUB(main)
                 WAITMS(200)
                 get_dice_meaning($num_rerolled_dice, #TRUE)
                 WAITMS(RND(100, 200))
+            ELSE
+                $secondary_disposition = #TRUE
             END_IF
-            $secondary_disposition = #TRUE
 
             analize()
             log_analize()
