@@ -18,5 +18,6 @@ Thumbs.db
 **/*.lnk
 !/zDice_MagicSchoolDevelopment/_Dice_MagicSchoolDescription.txt
 /*.bmp
+/*.7z
 
 # User other data
