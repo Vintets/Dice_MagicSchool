@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.2.3 (18.08.2025)
+// Version: 1.2.5 (18.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -454,7 +454,7 @@ SUB(main)
         $reroll_available = 6
         $num_rerolled_dice = -1
         waiting_to_cast(0)
-        WAITMS(RND(150, 550))
+        WAITMS(200)
         get_dice_meaning(0, #TRUE)
         get_dice_meaning(1, #FALSE)
         get_dice_meaning(2, #FALSE)
@@ -463,16 +463,21 @@ SUB(main)
             LOG_ARR("$dice_meanings", ARRSIZE($dice_meanings))
         END_IF
 
+        $secondary_disposition = #FALSE
         WHILE(($reroll_available > 0) & ($finish == #FALSE))
+            IF($secondary_disposition)
+                waiting_to_cast($num_rerolled_dice)
+                WAITMS(200)
+                get_dice_meaning($num_rerolled_dice, #TRUE)
+                WAITMS(RND(100, 200))
+            END_IF
+            $secondary_disposition = #TRUE
+
             analize()
             log_analize()
             IF($finish == #FALSE)
                 calc_reroll()
                 roll_dice($num_rerolled_dice)
-                waiting_to_cast($num_rerolled_dice)
-                WAITMS(200)
-                get_dice_meaning($num_rerolled_dice, #TRUE)
-                WAITMS(RND(150, 550))
             END_IF
             $reroll_available = $reroll_available - 1
 
