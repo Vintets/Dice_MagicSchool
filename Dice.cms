@@ -1,6 +1,6 @@
 ﻿#name "Dice_MagicSchool"
 // Author: Vint
-// Version: 1.2.0 (18.08.2025)
+// Version: 1.2.1 (18.08.2025)
 // Скрипт для Clickermann v4.13.014
 
 #define \n: STRCONCAT(char(13),char(10))
@@ -149,7 +149,7 @@ SUB(rel_move, $rm_delta_x, $rm_delta_y)
 END_SUB
 
 SUB(click, $cldelta_x, $cldelta_y)
-    IF($test)
+    IF($test == #FALSE)
         LCLICK($wx1 + $cldelta_x, $wy1 + $cldelta_y)
     ELSE
         rel_move($cldelta_x, $cldelta_y)  // если тест
@@ -161,7 +161,7 @@ END_SUB
 
 SUB(click_found, $clf_delta_x, $clf_delta_y)
     IF($is_found)
-        IF($test)
+        IF($test == #FALSE)
             LCLICK($found_x + $clf_delta_x, $found_y + $clf_delta_y)
         ELSE
             MOVE($found_x + $clf_delta_x, $found_y + $clf_delta_y)  // если тест
